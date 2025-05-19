@@ -3,7 +3,7 @@ set -x
 export HYDRA_FULL_ERROR=1
 export VLLM_ATTENTION_BACKEND=XFORMERS
 export HF_PATH=Yuanxin-Liu/${PROJECT_NAME}-${EXPERIMENT_NAME}
-export HF_TOKEN=
+export HF_TOKEN=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
 MODEL_NAME=Yuanxin-Liu/Qwen2.5-7B-e-step-round-2
 
 python3 data_preprocess/math_r1_dataset.py
