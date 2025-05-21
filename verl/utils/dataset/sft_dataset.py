@@ -96,7 +96,10 @@ class SFTDataset(Dataset):
             except Exception:
                 print(f"self.prompts={self.prompts}")
                 raise
-        self.prompts = self.prompts.tolist()
+        if self.prompt_dict_keys is None:
+            self.prompts = self.prompts.apply(lambda x: series_to_item(x), axis=1)  # noqa: B023
+
+        self.prompts = self.prompts.squeeze().tolist()
         self.responses = self.dataframe[self.response_key]
         for key in self.response_dict_keys:
             try:
@@ -104,7 +107,9 @@ class SFTDataset(Dataset):
             except Exception:
                 print(f"self.responses={self.responses}")
                 raise
-        self.responses = self.responses.tolist()
+        if self.response_dict_keys is None:
+            self.responses = self.responses.apply(lambda x: series_to_item(x), axis=1)
+        self.responses = self.responses.squeeze().tolist()
 
     def __len__(self):
         return len(self.prompts)
@@ -112,11 +117,11 @@ class SFTDataset(Dataset):
     def __getitem__(self, item):
         tokenizer = self.tokenizer
 
-        prompt = self.prompts[item]
+        prompt_chat = self.prompts[item]
         response = self.responses[item]
 
         # apply chat template
-        prompt_chat = [{"role": "user", "content": prompt}]
+        # prompt_chat = [{"role": "user", "content": prompt}]
 
         # string
         prompt_chat_str = tokenizer.apply_chat_template(prompt_chat, add_generation_prompt=True, tokenize=False)

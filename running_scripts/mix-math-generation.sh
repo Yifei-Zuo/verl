@@ -16,7 +16,7 @@ fi
 python3 data_preprocess/create_math_data_mix.py --local_dir data/mix-math/train.parquet
 
 
-python3 -m verl.trainer.main_generation \
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python3 -m verl.trainer.main_generation \
     trainer.nnodes=1 \
     trainer.n_gpus_per_node=8 \
     data.path=./data/mix-math/train.parquet \
