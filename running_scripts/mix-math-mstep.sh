@@ -11,16 +11,16 @@ SAVE_LOCAL_DIR=${SAVE_LOCAL_DIR_PREFIX}${PROJECT_NAME}/${EXPERIMENT_NAME}
 export HF_PATH=Yuanxin-Liu/${PROJECT_NAME}-${EXPERIMENT_NAME}
 
 python3 running_scripts/generation_to_hub.py \
-    --datafiles ./data/mix-math-emodel-round2/generation.parquet \
-    --hub Yuanxin-Liu/mix-math-7b-emodel-round2-rs
+    --datafiles ./data/mix-math-emodel-round3/generation.parquet \
+    --hub Yuanxin-Liu/mix-math-7b-emodel-round3-rs
 
 python3 -m verl.trainer.main_filter \
-    --datafiles ./data/mix-math-emodel-round2/generation.parquet \
-    --output_files ./data/mix-math-emodel-round2/generation-filtered.parquet
+    --datafiles ./data/mix-math-emodel-round3/generation.parquet \
+    --output_files ./data/mix-math-emodel-round3/generation-filtered.parquet
 
 CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 torchrun --standalone --nproc_per_node=8 --nnodes=1 -m verl.trainer.fsdp_sft_trainer \
-        data.train_files=./data/mix-math-emodel-round2/generation-filtered.parquet \
-        data.val_files=./data/mix-math-emodel-round2/generation-filtered.parquet \
+        data.train_files=./data/mix-math-emodel-round3/generation-filtered.parquet \
+        data.val_files=./data/mix-math-emodel-round3/generation-filtered.parquet \
         data.prompt_key=prompt \
         data.response_key=responses \
         data.train_batch_size=8 \
@@ -39,7 +39,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 torchrun --standalone --nproc_per_node=8 --
 
 for CHECKPOINT in ${SAVE_LOCAL_DIR}/global_step_*; do
     STEP=$(basename $CHECKPOINT)  # Extracts "global_step_X"
-    HUB_MODEL_ID="Yuanxin-Liu/estep-rs-round2-epoch4-step-${STEP}"
+    HUB_MODEL_ID="Yuanxin-Liu/estep-rs-round3-epoch4-step-${STEP}"
 
     echo "Pushing checkpoint: $STEP to Hugging Face Hub at $HUB_MODEL_ID"
 

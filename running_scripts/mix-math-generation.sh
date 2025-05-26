@@ -4,7 +4,7 @@ export HYDRA_FULL_ERROR=1
 export VLLM_ATTENTION_BACKEND=XFORMERS
 export HF_PATH=Yuanxin-Liu/${PROJECT_NAME}-${EXPERIMENT_NAME}
 export HF_TOKEN=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
-MODEL_NAME=Yuanxin-Liu/Qwen2.5-7B-e-step-round-2
+MODEL_NAME=Yuanxin-Liu/Qwen2.5-7B-e-step-round-3
 
 python3 data_preprocess/math_r1_dataset.py
 python3 data_preprocess/still_30k.py
@@ -22,7 +22,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python3 -m verl.trainer.main_generation \
     data.path=./data/mix-math/train.parquet \
     data.prompt_key=prompt \
     data.n_samples=2 \
-    data.output_path=./data/mix-math-emodel-round2/generation.parquet \
+    data.output_path=./data/mix-math-emodel-round3/generation.parquet \
     model.path=$MODEL_NAME \
     +model.trust_remote_code=True \
     rollout.temperature=1.0 \
@@ -35,5 +35,5 @@ CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python3 -m verl.trainer.main_generation \
     rollout.max_num_batched_tokens=262144
 
 python3 running_scripts/generation_to_hub.py --push \
-    --datafiles ./data/mix-math-emodel-round2/generation.parquet \
-    --hub Yuanxin-Liu/mix-math-7b-emodel-round2-rs
+    --datafiles ./data/mix-math-emodel-round3/generation.parquet \
+    --hub Yuanxin-Liu/mix-math-7b-emodel-round3-rs
